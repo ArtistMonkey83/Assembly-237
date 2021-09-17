@@ -1,0 +1,156 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: µVision V5.35.0.0
+Copyright (C) 2021 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: Yolanda Reyes, California State University Chico, LIC=----
+ 
+Tool Versions:
+Toolchain:       MDK-Lite  Version: 5.35.0.2
+Toolchain Path:  C:\Keil_v5\ARM\ARMCLANG\Bin
+C Compiler:      ArmClang.exe V6.16
+Assembler:       Armasm.exe V6.16
+Linker/Locator:  ArmLink.exe V6.16
+Library Manager: ArmAr.exe V6.16
+Hex Converter:   FromElf.exe V6.16
+CPU DLL:         SARMCM3.DLL V5.35.0.2
+Dialog DLL:      DCM.DLL V1.17.3.0
+Target DLL:      lmidk-agdi.dll V???
+Dialog DLL:      TCM.DLL V1.53.0.0
+ 
+<h2>Project:</h2>
+C:\Users\YReyes\Desktop\EECE237\program1-skeleton\Y_Reyes_Program3_Rainbow_LED\Y_Reyes_Program2_Rainbow_LED\hello-world.uvprojx
+Project File Date:  09/02/2021
+
+<h2>Output:</h2>
+*** Using Compiler 'V6.16', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
+Build target 'Target 1'
+assembling main.s...
+"main.s", line 17 (column 10): Error: A1163E: Unknown opcode uint32_t , expecting opcode or Macro
+   17 00000000 volatile uint32_t tick = 0;
+                        ^
+"main.s", line 64 (column 2): Error: A1137E: Unexpected characters at end of line
+   64 0000001e  //Author : cortex-m.com
+                ^
+"main.s", line 65: Error: A1167E: Invalid line start 
+   65 0000001e //Function : Periodic mode milliseconds delay
+"main.s", line 67: Error: A1167E: Invalid line start 
+   67 0000001e #include "TM4C123.h"                    // Device header
+"main.s", line 69 (column 6): Error: A1163E: Unknown opcode timer0A_delayMs(int , expecting opcode or Macro
+   69 0000001e void timer0A_delayMs(int ttime);
+                    ^
+"main.s", line 71 (column 5): Error: A1163E: Unknown opcode main , expecting opcode or Macro
+   71 0000001e int main (void)
+                   ^
+"main.s", line 72: Error: A1167E: Invalid line start 
+   72 0000001e {
+"main.s", line 73 (column 5): Error: A1137E: Unexpected characters at end of line
+   73 0000001e     /* enable clock to GPIOF at clock gating control register */
+                   ^
+"main.s", line 74 (column 5): Error: A1163E: Unknown opcode SYSCTL->RCGCGPIO , expecting opcode or Macro
+   74 0000001e     SYSCTL->RCGCGPIO |= 0x20;
+                   ^
+"main.s", line 75 (column 5): Error: A1137E: Unexpected characters at end of line
+   75 0000001e     /* enable the GPIO pins for the LED (PF3, 2 1) as output */
+                   ^
+"main.s", line 76 (column 5): Error: A1163E: Unknown opcode GPIOF->DIR , expecting opcode or Macro
+   76 0000001e     GPIOF->DIR = 0x0E;
+                   ^
+"main.s", line 77 (column 5): Error: A1137E: Unexpected characters at end of line
+   77 0000001e     /* enable the GPIO pins for digital function */
+                   ^
+"main.s", line 78 (column 5): Error: A1163E: Unknown opcode GPIOF->DEN , expecting opcode or Macro
+   78 0000001e     GPIOF->DEN = 0x0E;
+                   ^
+"main.s", line 80 (column 5): Error: A1163E: Unknown opcode while(1) , expecting opcode or Macro
+   80 0000001e     while(1)
+                   ^
+"main.s", line 81 (column 5): Error: A1137E: Unexpected characters at end of line
+   81 0000001e     {
+                   ^
+"main.s", line 82 (column 9): Error: A1163E: Unknown opcode GPIOF->DATA , expecting opcode or Macro
+   82 0000001e         GPIOF->DATA = 2;        /* turn on red LED */
+                       ^
+"main.s", line 83 (column 9): Error: A1163E: Unknown opcode timer0A_delayMs(500) , expecting opcode or Macro
+   83 0000001e         timer0A_delayMs(500);   /* TimerA 500 msec delay */
+                       ^
+"main.s", line 84 (column 9): Error: A1163E: Unknown opcode GPIOF->DATA , expecting opcode or Macro
+   84 0000001e         GPIOF->DATA = 0;        /* turn off red LED */
+                       ^
+"main.s", line 85 (column 9): Error: A1163E: Unknown opcode timer0A_delayMs(500) , expecting opcode or Macro
+   85 0000001e         timer0A_delayMs(500);   /* TimerA 500 msec delay */
+                       ^
+"main.s", line 86 (column 5): Error: A1137E: Unexpected characters at end of line
+   86 0000001e     }
+                   ^
+"main.s", line 88: Error: A1167E: Invalid line start 
+   88 0000001e }
+"main.s", line 90 (column 4): Error: A1163E: Unknown opcode multiple , expecting opcode or Macro
+   90 0000001e /* multiple of millisecond delay using periodic mode */
+                  ^
+"main.s", line 91 (column 6): Error: A1163E: Unknown opcode timer0A_delayMs(int , expecting opcode or Macro
+   91 0000001e void timer0A_delayMs(int ttime)
+                    ^
+"main.s", line 92: Error: A1167E: Invalid line start 
+   92 0000001e {
+"main.s", line 93 (column 5): Error: A1163E: Unknown opcode int , expecting opcode or Macro
+   93 0000001e     int i;
+                   ^
+"main.s", line 94 (column 5): Error: A1163E: Unknown opcode SYSCTL->RCGCTIMER , expecting opcode or Macro
+   94 0000001e     SYSCTL->RCGCTIMER |= 1;     /* enable clock to Timer Block 0 */
+                   ^
+"main.s", line 96 (column 5): Error: A1163E: Unknown opcode TIMER0->CTL , expecting opcode or Macro
+   96 0000001e     TIMER0->CTL = 0;            /* disable Timer before initialization */
+                   ^
+"main.s", line 97 (column 5): Error: A1163E: Unknown opcode TIMER0->CFG , expecting opcode or Macro
+   97 0000001e     TIMER0->CFG = 0x04;         /* 16-bit option */
+                   ^
+"main.s", line 98 (column 5): Error: A1163E: Unknown opcode TIMER0->TAMR , expecting opcode or Macro
+   98 0000001e     TIMER0->TAMR = 0x02;        /* periodic mode and down-counter */
+                   ^
+"main.s", line 99 (column 5): Error: A1163E: Unknown opcode TIMER0->TAILR , expecting opcode or Macro
+   99 0000001e     TIMER0->TAILR = 16000 - 1;  /* Timer A interval load value register */
+                   ^
+"main.s", line 100 (column 5): Error: A1163E: Unknown opcode TIMER0->ICR , expecting opcode or Macro
+  100 0000001e     TIMER0->ICR = 0x1;          /* clear the TimerA timeout flag*/
+                   ^
+"main.s", line 101 (column 5): Error: A1163E: Unknown opcode TIMER0->CTL , expecting opcode or Macro
+  101 0000001e     TIMER0->CTL |= 0x01;        /* enable Timer A after initialization */
+                   ^
+"main.s", line 103 (column 5): Error: A1163E: Unknown opcode for(i , expecting opcode or Macro
+  103 0000001e     for(i = 0; i < ttime; i++) { while ((TIMER0->RIS & 0x1) == 0) ;      /* wait for TimerA timeout flag */
+                   ^
+"main.s", line 104 (column 9): Error: A1163E: Unknown opcode TIMER0->ICR , expecting opcode or Macro
+  104 0000001e         TIMER0->ICR = 0x1;      /* clear the TimerA timeout flag */
+                       ^
+"main.s", line 105 (column 5): Error: A1137E: Unexpected characters at end of line
+  105 0000001e     }
+                   ^
+"main.s", line 106: Error: A1167E: Invalid line start 
+  106 0000001e }
+36 Errors, 0 Warnings
+linking...
+.\Objects\hello-world.axf: error: L6002U: Could not open file .\objects\main.o: No such file or directory
+Not enough information to list image symbols.
+Not enough information to list load addresses in the image map.
+Finished: 2 information, 0 warning, 0 error and 1 fatal error messages.
+".\Objects\hello-world.axf" - 1 Error(s), 0 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: Keil
+                http://www.keil.com/pack/Keil.TM4C_DFP.1.1.0.pack
+                Keil.TM4C_DFP.1.1.0
+                Texas Instruments Tiva C Series Device Support and Examples
+
+<h2>Collection of Component include folders:</h2>
+  C:\Users\YReyes\AppData\Local\Arm\Packs\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123
+
+<h2>Collection of Component Files used:</h2>
+Target not created.
+Build Time Elapsed:  00:00:00
+</pre>
+</body>
+</html>
