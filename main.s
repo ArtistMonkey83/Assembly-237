@@ -23,9 +23,8 @@ CHUKUI	  EQU 0x00
 
 Start;----------write your code below this line!-----
 
-OTRA_VEZ
 	BL		PORT_F_INIT				;Function: Initializes Port F, I/O, etc. Leave this alone!
-
+otra_vez
 	LDR R4, =SIKI
 	LDR R1, =GPIO_PORTF_DATA_R ;PLACING ADDRESS IN R1
 	LDR R0, [R1]
@@ -37,39 +36,13 @@ OTRA_VEZ
 	STR R0,[R1];r0 into r1
 	
 	
-delay
+delay1
 	SUB R5,R5,#1 ;WILL OVERWRITE R5 WITH A DECREMENTED BY ONE VALUE!! == R5--/R5=R5-1 
 	CMP R5, #0	;check the zero flag, if it isn't we will stay in the loop
 	
-	BNE delay	;As long as R5 isn't == 0 it will loop
-	
-	;BL CYCLE_SIALI
-	BL CYCLE_TEWELI
-	;BL CYCLE_ORANGE We need to switch between yellow and red to appear Orange
-	;BL CYCLE_PURPLE 
-	;BL CYCLE_SAWAI
-	;BL CYCLE_CHUKUI
-	;BL CYCLE_TOSALI
-	
-	
-loop	B loop						;end w/ infinite loop; jumps to label "loop" and repeats this line forever
+	BNE delay1	;As long as R5 isn't == 0 it will loop
 
-ERR									;Error state, if something bad happens, go here.
-	B   ERR
-
-;------------------------------------------------------------------
-;------------------Yolie's Subroutines Start Here------------------
-;------------------------------------------------------------------
-
-
-;----------Cycle to the BLUE LED --------------	
-;Cycles to the color blue on the on board LED
-;Input:
-;Output:
-;Modifies On board LED, R0, R1 
-CYCLE_TEWELI ;Tey well e
-	
-
+;CYCLE_PURPLE "Morado, Violett"
 	LDR R4, =TEWELI	;load the value for BLUE variable into register R4 with is 0x02, 0010 == 2
 	LDR R1, =GPIO_PORTF_DATA_R ;Loads the address of the Port F data register into F1
 	LDR R0, [R1]	;R1 -> PORTF -> LIGHTS (state of) Gets the address of current state of the lights
@@ -92,24 +65,16 @@ CYCLE_TEWELI ;Tey well e
 	;R0 = red light on
 	;R1-> PORT F -> LIGHTS
 	
-	MOV R5, #0x0050000 ;delay by counting down
-
-delay
+	MOV R5, #0x0500000 ;delay by counting down
+	
+delay2
 	SUB R5,R5,#1 ;WILL OVERWRITE R5 WITH A DECREMENTED BY ONE VALUE!! == R5--/R5=R5-1 
 	CMP R5, #0	;check the zero flag, if it isn't we will stay in the loop
 	
-	BNE delay	;As long as R5 isn't == 0 it will loop
+	BNE delay2	;As long as R5 isn't == 0 it will loop
 	
-	BL OTRA_VEZ ;BROWN IS HUSAI IN YO 'EME!
-	
-	
-;----------Cycle to the PURPLE LED --------------	
-;Cycles to the color PURPLE on the on board LED
-;Input:
-;Output:
-;Modifies On board LED, R0, R1 
-CYCLE_PURPLE ;TURN ON THE SIKI AND TEWELI 
-	
+;CYCLE_TEWELI Tey well e "blue,azul,bleu,blau"
+
 
 	LDR R4, =PURPLE	;load the value for BLUE variable into register R4 with is 0x02, 0010 == 2
 	LDR R1, =GPIO_PORTF_DATA_R ;Loads the address of the Port F data register into F1
@@ -134,16 +99,375 @@ CYCLE_PURPLE ;TURN ON THE SIKI AND TEWELI
 	;R1-> PORT F -> LIGHTS
 	
 	MOV R5, #0x0500000 ;delay by counting down
-	
-delay
+
+delay3
 	SUB R5,R5,#1 ;WILL OVERWRITE R5 WITH A DECREMENTED BY ONE VALUE!! == R5--/R5=R5-1 
 	CMP R5, #0	;check the zero flag, if it isn't we will stay in the loop
 	
-	BNE delay	;As long as R5 isn't == 0 it will loop
-	BL delay
+	BNE delay3	;As long as R5 isn't == 0 it will loop
 	
-	BL OTRA_VEZ ;BROWN IS HUSAI IN YO 'EME!
+;CYCLE_SIALI
+	LDR R4, =SIALI	;load the value for BLUE variable into register R4 with is 0x02, 0010 == 2
+	LDR R1, =GPIO_PORTF_DATA_R ;Loads the address of the Port F data register into F1
+	LDR R0, [R1]	;R1 -> PORTF -> LIGHTS (state of) Gets the address of current state of the lights
+	AND R0,R0,#0xF1 ;check to see whats on, turn off? And will clear bits.
+	;0xF1 = 1111 0001 
+	;AND
+	;PORTF = 0000 1100 blue green lights are 4 and 8 bit and they are on
+	;clearing bits unless both are on! then we can use OR to set bits
 	
+	ORR R0, R0,R4  ; R4 has the color we want to change to, R0
+	;     GBR
+	;0000 0001 == R0 OR all lights are off
+	;0000 0010 == 0x02 RED
+	;----------
+	;0000 0011 == Now the bit for red is on!
+	; R0 = code for RED
+	
+	STR R0,[R1]		;r0 into r1 we need brackets to access the data de reference 
+	;In the STR the destination is on the right in brackets!
+	;R0 = red light on
+	;R1-> PORT F -> LIGHTS
+	
+	MOV R5, #0x0500000 ;delay by counting down
+	
+delay4
+	SUB R5,R5,#1 ;WILL OVERWRITE R5 WITH A DECREMENTED BY ONE VALUE!! == R5--/R5=R5-1 
+	CMP R5, #0	;check the zero flag, if it isn't we will stay in the loop
+	
+	BNE delay4	;As long as R5 isn't == 0 it will loop
+	
+;CYCLE_SAWAI Tey well e "blue,azul,bleu,blau"
+	
+
+	LDR R4, =SAWAI	;load the value for BLUE variable into register R4 with is 0x02, 0010 == 2
+	LDR R1, =GPIO_PORTF_DATA_R ;Loads the address of the Port F data register into F1
+	LDR R0, [R1]	;R1 -> PORTF -> LIGHTS (state of) Gets the address of current state of the lights
+	AND R0,R0,#0xF1 ;check to see whats on, turn off? And will clear bits.
+	;0xF1 = 1111 0001 
+	;AND
+	;PORTF = 0000 1100 blue green lights are 4 and 8 bit and they are on
+	;clearing bits unless both are on! then we can use OR to set bits
+	
+	ORR R0, R0,R4  ; R4 has the color we want to change to, R0
+	;     GBR
+	;0000 0001 == R0 OR all lights are off
+	;0000 0010 == 0x02 RED
+	;----------
+	;0000 0011 == Now the bit for red is on!
+	; R0 = code for RED
+	
+	STR R0,[R1]		;r0 into r1 we need brackets to access the data de reference 
+	;In the STR the destination is on the right in brackets!
+	;R0 = red light on
+	;R1-> PORT F -> LIGHTS
+	
+	MOV R5, #0x0500000 ;delay by counting down
+
+delay5
+	SUB R5,R5,#1 ;WILL OVERWRITE R5 WITH A DECREMENTED BY ONE VALUE!! == R5--/R5=R5-1 
+	CMP R5, #0	;check the zero flag, if it isn't we will stay in the loop
+	
+	BNE delay5	;As long as R5 isn't == 0 it will loop
+	
+;CYCLE_TOSALI
+	LDR R4, =SAWAI	;load the value for BLUE variable into register R4 with is 0x02, 0010 == 2
+	LDR R1, =GPIO_PORTF_DATA_R ;Loads the address of the Port F data register into F1
+	LDR R0, [R1]	;R1 -> PORTF -> LIGHTS (state of) Gets the address of current state of the lights
+	AND R0,R0,#0xF1 ;check to see whats on, turn off? And will clear bits.
+	;0xF1 = 1111 0001 
+	;AND
+	;PORTF = 0000 1100 blue green lights are 4 and 8 bit and they are on
+	;clearing bits unless both are on! then we can use OR to set bits
+	
+	ORR R0, R0,R4  ; R4 has the color we want to change to, R0
+	;     GBR
+	;0000 0001 == R0 OR all lights are off
+	;0000 0010 == 0x02 RED
+	;----------
+	;0000 0011 == Now the bit for red is on!
+	; R0 = code for RED
+	
+	STR R0,[R1]		;r0 into r1 we need brackets to access the data de reference 
+	;In the STR the destination is on the right in brackets!
+	;R0 = red light on
+	;R1-> PORT F -> LIGHTS
+	
+	MOV R5, #0x0050000 ;delay by counting down
+	
+
+;CYCLE_TOSALI
+	LDR R4, =TOSALI	;load the value for BLUE variable into register R4 with is 0x02, 0010 == 2
+	LDR R1, =GPIO_PORTF_DATA_R ;Loads the address of the Port F data register into F1
+	LDR R0, [R1]	;R1 -> PORTF -> LIGHTS (state of) Gets the address of current state of the lights
+	AND R0,R0,#0xF1 ;check to see whats on, turn off? And will clear bits.
+	;0xF1 = 1111 0001 
+	;AND
+	;PORTF = 0000 1100 blue green lights are 4 and 8 bit and they are on
+	;clearing bits unless both are on! then we can use OR to set bits
+	
+	ORR R0, R0,R4  ; R4 has the color we want to change to, R0
+	;     GBR
+	;0000 0001 == R0 OR all lights are off
+	;0000 0010 == 0x02 RED
+	;----------
+	;0000 0011 == Now the bit for red is on!
+	; R0 = code for RED
+	
+	STR R0,[R1]		;r0 into r1 we need brackets to access the data de reference 
+	;In the STR the destination is on the right in brackets!
+	;R0 = red light on
+	;R1-> PORT F -> LIGHTS
+	
+	MOV R5, #0x0050000 ;delay by counting down
+	
+delay14
+	SUB R5,R5,#1 ;WILL OVERWRITE R5 WITH A DECREMENTED BY ONE VALUE!! == R5--/R5=R5-1 
+	CMP R5, #0	;check the zero flag, if it isn't we will stay in the loop
+	
+	BNE delay14	;As long as R5 isn't == 0 it will loop
+	
+;CYCLE_TEWELI Tey well e "blue,azul,bleu,blau"
+	
+
+	LDR R4, =CHUKUI	;load the value for BLUE variable into register R4 with is 0x02, 0010 == 2
+	LDR R1, =GPIO_PORTF_DATA_R ;Loads the address of the Port F data register into F1
+	LDR R0, [R1]	;R1 -> PORTF -> LIGHTS (state of) Gets the address of current state of the lights
+	AND R0,R0,#0xF1 ;check to see whats on, turn off? And will clear bits.
+	;0xF1 = 1111 0001 
+	;AND
+	;PORTF = 0000 1100 blue green lights are 4 and 8 bit and they are on
+	;clearing bits unless both are on! then we can use OR to set bits
+	
+	ORR R0, R0,R4  ; R4 has the color we want to change to, R0
+	;     GBR
+	;0000 0001 == R0 OR all lights are off
+	;0000 0010 == 0x02 RED
+	;----------
+	;0000 0011 == Now the bit for red is on!
+	; R0 = code for RED
+	
+	STR R0,[R1]		;r0 into r1 we need brackets to access the data de reference 
+	;In the STR the destination is on the right in brackets!
+	;R0 = red light on
+	;R1-> PORT F -> LIGHTS
+	
+	MOV R5, #0x0050000 ;delay by counting down
+
+delay15
+	SUB R5,R5,#1 ;WILL OVERWRITE R5 WITH A DECREMENTED BY ONE VALUE!! == R5--/R5=R5-1 
+	CMP R5, #0	;check the zero flag, if it isn't we will stay in the loop
+	
+	BNE delay15	;As long as R5 isn't == 0 it will loop
+	
+;CYCLE_TOSALI
+	LDR R4, =TOSALI	;load the value for BLUE variable into register R4 with is 0x02, 0010 == 2
+	LDR R1, =GPIO_PORTF_DATA_R ;Loads the address of the Port F data register into F1
+	LDR R0, [R1]	;R1 -> PORTF -> LIGHTS (state of) Gets the address of current state of the lights
+	AND R0,R0,#0xF1 ;check to see whats on, turn off? And will clear bits.
+	;0xF1 = 1111 0001 
+	;AND
+	;PORTF = 0000 1100 blue green lights are 4 and 8 bit and they are on
+	;clearing bits unless both are on! then we can use OR to set bits
+	
+	ORR R0, R0,R4  ; R4 has the color we want to change to, R0
+	;     GBR
+	;0000 0001 == R0 OR all lights are off
+	;0000 0010 == 0x02 RED
+	;----------
+	;0000 0011 == Now the bit for red is on!
+	; R0 = code for RED
+	
+	STR R0,[R1]		;r0 into r1 we need brackets to access the data de reference 
+	;In the STR the destination is on the right in brackets!
+	;R0 = red light on
+	;R1-> PORT F -> LIGHTS
+	
+	MOV R5, #0x0050000 ;delay by counting down
+	
+delay16
+	SUB R5,R5,#1 ;WILL OVERWRITE R5 WITH A DECREMENTED BY ONE VALUE!! == R5--/R5=R5-1 
+	CMP R5, #0	;check the zero flag, if it isn't we will stay in the loop
+	
+	BNE delay16	;As long as R5 isn't == 0 it will loop
+	
+;CYCLE_TEWELI Tey well e "blue,azul,bleu,blau"
+	
+
+	LDR R4, =CHUKUI	;load the value for BLUE variable into register R4 with is 0x02, 0010 == 2
+	LDR R1, =GPIO_PORTF_DATA_R ;Loads the address of the Port F data register into F1
+	LDR R0, [R1]	;R1 -> PORTF -> LIGHTS (state of) Gets the address of current state of the lights
+	AND R0,R0,#0xF1 ;check to see whats on, turn off? And will clear bits.
+	;0xF1 = 1111 0001 
+	;AND
+	;PORTF = 0000 1100 blue green lights are 4 and 8 bit and they are on
+	;clearing bits unless both are on! then we can use OR to set bits
+	
+	ORR R0, R0,R4  ; R4 has the color we want to change to, R0
+	;     GBR
+	;0000 0001 == R0 OR all lights are off
+	;0000 0010 == 0x02 RED
+	;----------
+	;0000 0011 == Now the bit for red is on!
+	; R0 = code for RED
+	
+	STR R0,[R1]		;r0 into r1 we need brackets to access the data de reference 
+	;In the STR the destination is on the right in brackets!
+	;R0 = red light on
+	;R1-> PORT F -> LIGHTS
+	
+	MOV R5, #0x0050000 ;delay by counting down
+
+delay17
+	SUB R5,R5,#1 ;WILL OVERWRITE R5 WITH A DECREMENTED BY ONE VALUE!! == R5--/R5=R5-1 
+	CMP R5, #0	;check the zero flag, if it isn't we will stay in the loop
+	
+	BNE delay17	;As long as R5 isn't == 0 it will loop
+	
+;CYCLE_TOSALI
+	LDR R4, =TOSALI	;load the value for BLUE variable into register R4 with is 0x02, 0010 == 2
+	LDR R1, =GPIO_PORTF_DATA_R ;Loads the address of the Port F data register into F1
+	LDR R0, [R1]	;R1 -> PORTF -> LIGHTS (state of) Gets the address of current state of the lights
+	AND R0,R0,#0xF1 ;check to see whats on, turn off? And will clear bits.
+	;0xF1 = 1111 0001 
+	;AND
+	;PORTF = 0000 1100 blue green lights are 4 and 8 bit and they are on
+	;clearing bits unless both are on! then we can use OR to set bits
+	
+	ORR R0, R0,R4  ; R4 has the color we want to change to, R0
+	;     GBR
+	;0000 0001 == R0 OR all lights are off
+	;0000 0010 == 0x02 RED
+	;----------
+	;0000 0011 == Now the bit for red is on!
+	; R0 = code for RED
+	
+	STR R0,[R1]		;r0 into r1 we need brackets to access the data de reference 
+	;In the STR the destination is on the right in brackets!
+	;R0 = red light on
+	;R1-> PORT F -> LIGHTS
+	
+	MOV R5, #0x0050000 ;delay by counting down
+	
+delay18
+	SUB R5,R5,#1 ;WILL OVERWRITE R5 WITH A DECREMENTED BY ONE VALUE!! == R5--/R5=R5-1 
+	CMP R5, #0	;check the zero flag, if it isn't we will stay in the loop
+	
+	BNE delay18	;As long as R5 isn't == 0 it will loop
+	
+;CYCLE_TEWELI Tey well e "blue,azul,bleu,blau"
+	
+
+	LDR R4, =CHUKUI	;load the value for BLUE variable into register R4 with is 0x02, 0010 == 2
+	LDR R1, =GPIO_PORTF_DATA_R ;Loads the address of the Port F data register into F1
+	LDR R0, [R1]	;R1 -> PORTF -> LIGHTS (state of) Gets the address of current state of the lights
+	AND R0,R0,#0xF1 ;check to see whats on, turn off? And will clear bits.
+	;0xF1 = 1111 0001 
+	;AND
+	;PORTF = 0000 1100 blue green lights are 4 and 8 bit and they are on
+	;clearing bits unless both are on! then we can use OR to set bits
+	
+	ORR R0, R0,R4  ; R4 has the color we want to change to, R0
+	;     GBR
+	;0000 0001 == R0 OR all lights are off
+	;0000 0010 == 0x02 RED
+	;----------
+	;0000 0011 == Now the bit for red is on!
+	; R0 = code for RED
+	
+	STR R0,[R1]		;r0 into r1 we need brackets to access the data de reference 
+	;In the STR the destination is on the right in brackets!
+	;R0 = red light on
+	;R1-> PORT F -> LIGHTS
+	
+	MOV R5, #0x0050000 ;delay by counting down
+
+delay19
+	SUB R5,R5,#1 ;WILL OVERWRITE R5 WITH A DECREMENTED BY ONE VALUE!! == R5--/R5=R5-1 
+	CMP R5, #0	;check the zero flag, if it isn't we will stay in the loop
+	
+	BNE delay19	;As long as R5 isn't == 0 it will loop
+	
+;CYCLE_TOSALI
+	LDR R4, =TOSALI	;load the value for BLUE variable into register R4 with is 0x02, 0010 == 2
+	LDR R1, =GPIO_PORTF_DATA_R ;Loads the address of the Port F data register into F1
+	LDR R0, [R1]	;R1 -> PORTF -> LIGHTS (state of) Gets the address of current state of the lights
+	AND R0,R0,#0xF1 ;check to see whats on, turn off? And will clear bits.
+	;0xF1 = 1111 0001 
+	;AND
+	;PORTF = 0000 1100 blue green lights are 4 and 8 bit and they are on
+	;clearing bits unless both are on! then we can use OR to set bits
+	
+	ORR R0, R0,R4  ; R4 has the color we want to change to, R0
+	;     GBR
+	;0000 0001 == R0 OR all lights are off
+	;0000 0010 == 0x02 RED
+	;----------
+	;0000 0011 == Now the bit for red is on!
+	; R0 = code for RED
+	
+	STR R0,[R1]		;r0 into r1 we need brackets to access the data de reference 
+	;In the STR the destination is on the right in brackets!
+	;R0 = red light on
+	;R1-> PORT F -> LIGHTS
+	
+	MOV R5, #0x0050000 ;delay by counting down
+	
+delay20
+	SUB R5,R5,#1 ;WILL OVERWRITE R5 WITH A DECREMENTED BY ONE VALUE!! == R5--/R5=R5-1 
+	CMP R5, #0	;check the zero flag, if it isn't we will stay in the loop
+	
+	BNE delay20	;As long as R5 isn't == 0 it will loop
+	
+;CYCLE_TEWELI Tey well e "blue,azul,bleu,blau"
+	
+
+	LDR R4, =CHUKUI	;load the value for BLUE variable into register R4 with is 0x02, 0010 == 2
+	LDR R1, =GPIO_PORTF_DATA_R ;Loads the address of the Port F data register into F1
+	LDR R0, [R1]	;R1 -> PORTF -> LIGHTS (state of) Gets the address of current state of the lights
+	AND R0,R0,#0xF1 ;check to see whats on, turn off? And will clear bits.
+	;0xF1 = 1111 0001 
+	;AND
+	;PORTF = 0000 1100 blue green lights are 4 and 8 bit and they are on
+	;clearing bits unless both are on! then we can use OR to set bits
+	
+	ORR R0, R0,R4  ; R4 has the color we want to change to, R0
+	;     GBR
+	;0000 0001 == R0 OR all lights are off
+	;0000 0010 == 0x02 RED
+	;----------
+	;0000 0011 == Now the bit for red is on!
+	; R0 = code for RED
+	
+	STR R0,[R1]		;r0 into r1 we need brackets to access the data de reference 
+	;In the STR the destination is on the right in brackets!
+	;R0 = red light on
+	;R1-> PORT F -> LIGHTS
+	
+	MOV R5, #0x0050000 ;delay by counting down
+
+delay21
+	SUB R5,R5,#1 ;WILL OVERWRITE R5 WITH A DECREMENTED BY ONE VALUE!! == R5--/R5=R5-1 
+	CMP R5, #0	;check the zero flag, if it isn't we will stay in the loop
+	
+	BNE delay21	;As long as R5 isn't == 0 it will loop
+	;BL CYCLE_SIALI
+	;BL CYCLE_TEWELI
+	;BL CYCLE_ORANGE We need to switch between yellow and red to appear Orange
+	;BL CYCLE_PURPLE 
+	;BL CYCLE_SAWAI
+	;BL CYCLE_CHUKUI
+	;BL CYCLE_TOSALI
+	
+	BL otra_vez
+	
+loop	B loop						;end w/ infinite loop; jumps to label "loop" and repeats this line forever
+
+ERR									;Error state, if something bad happens, go here.
+	B   ERR
+
+
+
 ;------------------------------------------------------------------
 ;----------------------Subroutines Start Here----------------------
 ;------------------------------------------------------------------
