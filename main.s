@@ -1,11 +1,10 @@
-; Name Yolanda Reyes
-; Wildcat ID Number 011234614
-; Assignment Name/Number Program 2 Rainbow LED
+; Name
+; Wildcat ID Number
+; Assignment Name/Number
 ; EECE 237 Fall 2021
 
 BASE_MEMORY EQU 0x20000000			;Tiva base memory address
-;PORTF constants for reference 
-
+;PORTF constants for reference 	
 ;Yokiam "colors" in Yo'eme
 SIKI      EQU 0x02					;Red LED - 1st bit (001x), like a macro/#define in c
 TEWELI	  EQU 0x04					;8 4 2 1
@@ -14,8 +13,7 @@ SAWAI	  EQU 0x0A					;
 ;AQUA	  EQU 0x0C
 PURPLE	  EQU 0x06
 TOSALI	  EQU 0x0f
-CHUKUI	  EQU 0x00
-	
+CHUKUI	  EQU 0x00  
 ;------------DO NOT REMOVE--------------------------- 
         AREA    |.text|, CODE, READONLY, ALIGN=2 
         THUMB 
@@ -25,56 +23,40 @@ CHUKUI	  EQU 0x00
 
 Start;----------write your code below this line!-----
 
-	BL		PORT_F_INIT				;Function: Initializes Port F, I/O, etc. Leave this alone! branch instruction
-OTRA_VEZ	
-	LDR R4, =SIKI	;seek e in Yo'eme is the color red. Load the value for RED variable into register R4 with is 0x02, 0010 == 2
-	LDR R1, =GPIO_PORTF_DATA_R ;Loads the address of the Port F data register into F1
+OTRA_VEZ
+	BL		PORT_F_INIT				;Function: Initializes Port F, I/O, etc. Leave this alone!
+
+	LDR R4, =SIKI
+	LDR R1, =GPIO_PORTF_DATA_R ;PLACING ADDRESS IN R1
+	LDR R0, [R1]
 	
-	;teacher implemented cycle here!
-	LDR R0, [R1]	;R1 -> PORTF -> LIGHTS (state of) Gets the address of current state of the lights
-	;teacher input the counter here and anything else at that location
-	MOV R5, #0x0050000 ;delay by counting down
+	MOV R5, #0x0500000 ;delay by counting down
 	
-	AND R0,R0,#0xF1 ;check to see whats on, turn off? And will clear bits.
-	;0xF1 = 1111 0001 
-	;AND
-	;PORTF = 0000 1100 blue green lights are 4 and 8 bit and they are on
-	;clearing bits unless both are on! then we can use OR to set bits
+	AND R0,R0,#0xF1 ;check to see whats on, turn off?
+	ORR R0, R0,R4  
+	STR R0,[R1];r0 into r1
 	
-	ORR R0, R0,R4  ; R4 has the color we want to change to, R0
-	;     GBR
-	;0000 0001 == R0 OR all lights are off
-	;0000 0010 == 0x02 RED
-	;----------
-	;0000 0011 == Now the bit for red is on!
-	; R0 = code for RED
-	
-	STR R0,[R1]		;r0 into r1 we need brackets to access the data de reference 
-	;In the STR the destination is on the right in brackets!
-	;R0 = red light on
-	;R1-> PORT F -> LIGHTS
 	
 delay
 	SUB R5,R5,#1 ;WILL OVERWRITE R5 WITH A DECREMENTED BY ONE VALUE!! == R5--/R5=R5-1 
 	CMP R5, #0	;check the zero flag, if it isn't we will stay in the loop
 	
 	BNE delay	;As long as R5 isn't == 0 it will loop
-	BL Counter
-	BL CYCLE_SIALI
+	
+	;BL CYCLE_SIALI
 	BL CYCLE_TEWELI
 	;BL CYCLE_ORANGE We need to switch between yellow and red to appear Orange
-	BL CYCLE_PURPLE 
-	BL CYCLE_SAWAI
-	BL CYCLE_CHUKUI
-	BL CYCLE_TOSALI
+	;BL CYCLE_PURPLE 
+	;BL CYCLE_SAWAI
+	;BL CYCLE_CHUKUI
+	;BL CYCLE_TOSALI
 	
-	BL OTRA_VEZ ;BROWN IS HUSAI IN YO 'EME!
 	
 loop	B loop						;end w/ infinite loop; jumps to label "loop" and repeats this line forever
-	
+
 ERR									;Error state, if something bad happens, go here.
 	B   ERR
-	
+
 ;------------------------------------------------------------------
 ;------------------Yolie's Subroutines Start Here------------------
 ;------------------------------------------------------------------
@@ -87,10 +69,8 @@ ERR									;Error state, if something bad happens, go here.
 ;Modifies On board LED, R0, R1 
 CYCLE_TEWELI ;Tey well e
 	
-	;LDR R4, = SYSCTL ; TURN ON BUS CLOCK FOR GPIOF
-	;LDR 
-	
-	LDR R4, =TEWELI	;load the value for RED variable into register R4 with is 0x02, 0010 == 2
+
+	LDR R4, =TEWELI	;load the value for BLUE variable into register R4 with is 0x02, 0010 == 2
 	LDR R1, =GPIO_PORTF_DATA_R ;Loads the address of the Port F data register into F1
 	LDR R0, [R1]	;R1 -> PORTF -> LIGHTS (state of) Gets the address of current state of the lights
 	AND R0,R0,#0xF1 ;check to see whats on, turn off? And will clear bits.
@@ -112,15 +92,58 @@ CYCLE_TEWELI ;Tey well e
 	;R0 = red light on
 	;R1-> PORT F -> LIGHTS
 	
-	B delay
+	MOV R5, #0x0050000 ;delay by counting down
+
+delay
+	SUB R5,R5,#1 ;WILL OVERWRITE R5 WITH A DECREMENTED BY ONE VALUE!! == R5--/R5=R5-1 
+	CMP R5, #0	;check the zero flag, if it isn't we will stay in the loop
 	
-;---------- Counter for --------------	
-;Counter to implement a delay
-;Input: R2
-;Output: 
-;Modifies: R2 by counting up 
-COUNTER ;counter
-	LDR R2 
+	BNE delay	;As long as R5 isn't == 0 it will loop
+	
+	BL OTRA_VEZ ;BROWN IS HUSAI IN YO 'EME!
+	
+	
+;----------Cycle to the PURPLE LED --------------	
+;Cycles to the color PURPLE on the on board LED
+;Input:
+;Output:
+;Modifies On board LED, R0, R1 
+CYCLE_PURPLE ;TURN ON THE SIKI AND TEWELI 
+	
+
+	LDR R4, =PURPLE	;load the value for BLUE variable into register R4 with is 0x02, 0010 == 2
+	LDR R1, =GPIO_PORTF_DATA_R ;Loads the address of the Port F data register into F1
+	LDR R0, [R1]	;R1 -> PORTF -> LIGHTS (state of) Gets the address of current state of the lights
+	AND R0,R0,#0xF1 ;check to see whats on, turn off? And will clear bits.
+	;0xF1 = 1111 0001 
+	;AND
+	;PORTF = 0000 1100 blue green lights are 4 and 8 bit and they are on
+	;clearing bits unless both are on! then we can use OR to set bits
+	
+	ORR R0, R0,R4  ; R4 has the color we want to change to, R0
+	;     GBR
+	;0000 0001 == R0 OR all lights are off
+	;0000 0010 == 0x02 RED
+	;----------
+	;0000 0011 == Now the bit for red is on!
+	; R0 = code for RED
+	
+	STR R0,[R1]		;r0 into r1 we need brackets to access the data de reference 
+	;In the STR the destination is on the right in brackets!
+	;R0 = red light on
+	;R1-> PORT F -> LIGHTS
+	
+	MOV R5, #0x0500000 ;delay by counting down
+	
+delay
+	SUB R5,R5,#1 ;WILL OVERWRITE R5 WITH A DECREMENTED BY ONE VALUE!! == R5--/R5=R5-1 
+	CMP R5, #0	;check the zero flag, if it isn't we will stay in the loop
+	
+	BNE delay	;As long as R5 isn't == 0 it will loop
+	BL delay
+	
+	BL OTRA_VEZ ;BROWN IS HUSAI IN YO 'EME!
+	
 ;------------------------------------------------------------------
 ;----------------------Subroutines Start Here----------------------
 ;------------------------------------------------------------------
