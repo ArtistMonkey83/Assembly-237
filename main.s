@@ -11,7 +11,7 @@ SIKI      EQU 0x02					;Red LED - 1st bit (001x), like a macro/#define in c
 TEWELI	  EQU 0x04					;8 4 2 1  Powers of two, the four bits that control color
 SIALI     EQU 0x08					;0 0 1 0  Putting a value in the 2^1  
 SAWAI	  EQU 0x0A					;This two in line 10 makes the LED red
-;AQUA	  EQU 0x0C
+TURQUOIS  EQU 0x0C
 PURPLE	  EQU 0x06
 TOSALI	  EQU 0x0f
 CHUKUI	  EQU 0x00  
@@ -26,7 +26,7 @@ Start;----------write your code below this line!-----
 
 	BL		PORT_F_INIT			;Function: Initializes Port F, I/O, etc. Leave this alone!
 otra_vez   						;Like the song that never ends!
-LDR R4, =SIKI					;Yo'eme for Red Seek E
+	LDR R4, =SIKI				;Yo'eme for Red Seek E
 	LDR R1, =GPIO_PORTF_DATA_R 	;PLACING ADDRESS IN R1
 	LDR R0, [R1]				;Loading register R0 with the data stored in R1 == GPIO_PORTF_DATA_R
 	
@@ -94,7 +94,7 @@ delay3
 	
 	BNE delay3					;As long as R5 isn't == 0 it will loop
 	
-;CYCLE_SIALI See Ally "green,
+;CYCLE_SIALI See Ally "green,verde,verte(t),grun"
 	LDR R4, =SIALI				;Load the value for GREEN variable into register R4 
 	LDR R1, =GPIO_PORTF_DATA_R  ;Loads the address of the Port F data register into F1
 	LDR R0, [R1]				;R1 -> PORTF -> LIGHTS (state of) Gets the address of current state of the lights
@@ -127,6 +127,23 @@ delay5
 	CMP R5, #0					;Check the zero flag, if it isn't we will stay in the loop
 	
 	BNE delay5					;As long as R5 isn't == 0 it will loop
+	
+;CYCLE_TURQUOIS "turquesa,turquoise,turkis"
+	LDR R4, =TURQUOIS			;Load the value for YELLOW variable into register R4 
+	LDR R1, =GPIO_PORTF_DATA_R 	;Loads the address of the Port F data register into F1
+	LDR R0, [R1]				;R1 -> PORTF -> LIGHTS (state of) Gets the address of current state of the lights
+	
+	AND R0,R0,#0xF1 			;Check to see whats on, turn off? And will clear bits.
+	ORR R0, R0,R4  				;R4 has the color we want to change to, R0
+	STR R0,[R1]					;R0 into R1 we need brackets to access the data de reference 
+	
+	MOV R5, #0x0500000 			;Delay by counting down #0x0500000 
+
+delay5A
+	SUB R5,R5,#1 				;WILL OVERWRITE R5 WITH A DECREMENTED BY ONE VALUE!! == R5--/R5=R5-1 
+	CMP R5, #0					;Check the zero flag, if it isn't we will stay in the loop
+	
+	BNE delay5A					;As long as R5 isn't == 0 it will loop
 	
 ;CYCLE_TOSALI Toe sal E	"white,blanco,blanche(c),weib"
 	LDR R4, =TOSALI				;Load the value for WHITE variable into register R4 
