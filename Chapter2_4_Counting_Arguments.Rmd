@@ -1,0 +1,303 @@
+---
+title: "Chapter 2-Probability"
+output:
+  word_document: null
+  html_document: default
+---
+## Section 2.4 Counting Arguements
+
+This section presents some common methods for counting the number of outcomes in a set.  When there are a lot of outcomes in an experiment, it is convenient to have a method of determining how many outcomes there are in $S$.
+
+<https://media.csuchico.edu/media/Math+350+Chapter+2.4+Multiplication+Rule/1_2eo4z7ze>
+
+**Multiplication rule**:  
+Suppose that an experiment has two parts.  In the first part there are $n_{1}$ outcomes and in the second part there are $n_{2}$ outcomes.  The composite experiment which consists of  both parts of the experiment then has $n_{1}\times n_{2}$ possible outcomes.
+
+####Example:  
+Let $E_{1}$ denote the selection of a rat form a cage containing one female (F) rat and one male (M) rat.  Let $E_{2}$ denote the administering of either drug A, drug B, or a placebo to the selected rat.
+
+How many possible outcomes are there? 
+
+List the possible outcomes?
+
+
+Another way of illustrating the multiplication principle is with a *tree diagram*.  The diagram shows that there are $n_{1}$=2 possibilities for the gender of the rat and that for each of these outcomes there are $n_{2}=3$ possibilities for the drug.
+
+The multiplication rule can be extended to more than two experiments.
+
+#### You try it:
+Each year starts on one of the seven days (Sunday through Saturday).  Each year is either a leap year (i.e., it includes February 29) or not.  How many different calendars are possible for a year?
+
+
+#### You try it:
+A chemical engineer wishes to observe the effects of temperature, pressure, and catalyst concentration on the yield resulting from a certain reaction.  If she intends to include two different temperatures, three pressures, and two levels of catalyst, how many different runs must she make in order to observe each temperature-pressure catalyst combination exactly twice?
+
+
+
+#### You try it:
+A restaurant offers a choice of four appetizers, fourteen entrees, six desserts, and five beverages. How many different meals are possible if a diner intends to order only three courses?
+
+```{r}
+
+```
+
+## Proposition 2.2 Combinations
+
+The number of ways of choosing $k$ distinct objects from a set of $n$ is given by
+\[
+\binom{n}{k}=\frac{n!}{k!\left(n-k\right)!}.
+\]
+
+#### Example
+
+The Alpha Beta Zeta sorority is trying to fill a pledge class of nine new members during fall rush.  Among the twenty-five available candidates, fifteen have been judged marginally acceptable and ten highly desirable.  How many ways can the pledge class be chosen to give a two-to-one ratio of highly desirable to marginally acceptable candidates?
+
+<https://media.csuchico.edu/media/Math+350+chapter+2.3+Sorority/1_th7tvd3q>
+```{r}
+
+
+```
+#### You try it
+
+The ``eating club'' is hosting a make-your-own sundae at which the following are provided:
+
+Ice Cream flavors: Chocolate, Cookies-n-cream, Strawberry, Vanilla
+
+Toppings: Caramel, Hot Fudge Marshmallow, M&Ms, Nuts, Strawberries
+
+How many different sundaes are possible using one flavor of ice cream and three different toppings?
+
+```{r}
+
+```
+
+How many sundaes are possible using one flavor of ice cream and from 0 to 6 toppings?
+```{r}
+
+
+```
+
+
+#### You try it
+
+Among 9 presidential candidates at a debate, 3 are republicans and 6 are democrats. 
+
+
+How many different ways can candidates be lined up?
+```{r}
+
+
+```
+
+How many different line ups are possible if each is labeled D or R?
+
+```{r}
+
+```
+
+#### You try it
+
+Nine students, five statistics majors and 4 computer science majors, interview for four summer internships sponsored by Google.
+
+a. In how many ways can Google choose a set of four interns?
+
+```{r}
+
+
+```
+
+b. In how many can Google choose 2 stat majors and 2 computer science majors?
+
+```{r}
+
+
+```
+
+c. How many sets of four can be picked such that not everyone in the set is the same major?
+
+```{r}
+
+
+```
+
+
+## Combinatorial Probability
+
+In the previous section our concern focused on counting the number of ways a given operation, or sequence of operations could be performed.  In this section we want to calculate the probability that a certain combination will occur.  For instance, from the previous section we would be able to count the total number of ways a poker player could draw a straight.  What if the poker player wanted to determine the probability of a straight.  How could we set this up?
+
+
+
+#### Example
+Ten equally qualified marketing assistants are candidates for promotion to associate buyer; seven are men and three are women.  If the company intends to promote four of the ten at random, what is the probability that exactly two of the four are women?
+
+<https://media.csuchico.edu/media/Math+350+Chapter+2.4+Promotion/1_oi4rp17e>
+
+```{r}
+##Total number of ways
+total<-choose(10,4)
+two_women<-choose(3,2)*choose(7,2)
+(prob_two_women<-two_women/total)
+```
+
+
+#### Example
+An urn contains twenty chips, numbered 1 through 20.  Two are drawn simultaneously.  What is the probability that the numbers on the two chips will differ by more than 2? Hint:  Calculate the complement and subtract from one.
+
+<https://media.csuchico.edu/media/Math+350+Chapter+2.4+Urns+more+than+2/1_s7qa1tqb>
+
+```{r}
+
+
+
+```
+
+
+
+#### Example
+Consider a set of ten urns, nine of which contain three white chips and three red chips each.  The tenth contains five white chips and one red chip.  An urn is picked at random.  Then a sample of size 3 is drawn without replacement from that urn.  If all three chips drawn are white what is the probability that the urn being sampled is the one with five white chips?
+
+<https://media.csuchico.edu/media/Math+350+Urns+2/1_d3ipuemf>
+
+```{r}
+
+
+```
+
+
+#### You try it:
+An apartment building has eight floors.  If seven people get on the elevator on the first floor, what is the probability that they all want to get off on different floors? On the same floor? 
+
+```{r}
+
+
+
+```
+
+#### You try it:
+If four dice are rolled, what is the probability that each of the four numbers that appear will be different?
+
+```{r}
+
+
+
+```
+
+#### End of chapter problems
+
+1. How many ways are there of getting 4 heads when tossing 10 coins? 
+
+```{r}
+
+
+
+```
+
+2. Ten basketball players meet in the school gym for a pickup game. How many ways can they form two teams of five each?
+
+```{r}
+
+teams<-choose(9,4)
+```
+
+3. Six standard six-sided dice are rolled.
+
+a. How many outcomes are there?
+
+```{r}
+outcomes<-6^6
+```
+
+
+
+b. How many outcomes are there such that all of the dice are different numbers?
+
+```{r}
+
+outcomesB<-factorial(6)   #6!
+```
+
+
+c. What is the probability that you obtain six different numbers when you roll six dice?
+
+```{r}
+rolls <-factorial(6)
+outcomesC<-(rolls/(6^6))
+
+
+```
+
+4. A committee of fifty politicians is to be chosen from among our one hundred US Senators. If the selection is done at random, what is the probability that each state will be represented?
+
+```{r}
+politicians<-choose(100,50)
+(poliProb<-(2/politicians))
+
+
+```
+
+
+5. A box contains 24 light bulbs, of which two are defective. If a person selects 10 bulbs at random, without replacement, what is the probability that both defective bulbs will be selected?
+
+```{r}
+defective<-choose(2,2) #
+diffBulbs<choose(22,8) #
+totalBulbs<-(defective +diffBulbs)  #
+probaBulbs<-(totalBulbs/ choose(24,10))  #
+
+```
+
+
+6. Suppose that two committees are to be formed in an organization that has 300 members.  If one committee is to have five members and the other committee is to have eight members, in how many different ways can these committees be selected?  Assume that you can only serve on one committee, not both.
+
+```{r}
+#two committess possible for 300 members
+#c1 = 5 c2 = 8
+first<-300,5
+scond<-(295,8)
+result<-first*second
+#choose(300,5)*choose(295,8)
+
+
+```
+
+7. In how many ways can five persons line up to get on a bus? 
+
+```{r}
+bus_line<factorial(5)
+
+
+
+```
+
+8. In how many ways can five persons line up to get on a bus if two of the people don't want to be next to one another?
+
+```{r}
+
+bus_line<-factorial(5) -factorial(4)
+
+```
+
+9. At the end of the day, a bakery gives everything that is unsold to food banks for the needy. It has 12 apple pies left at the end of a given day, in how many different ways can it distribute these pies among six food banks for the needy? Assume it is possible for any bakery to get between 0 and 12 pies.
+
+```{r}
+pies<-(factorial(13))^6
+
+
+```
+
+10. Five fair dice are rolled. What is the probability that the faces showing constitute a "full house" (three faces show one number and 2 faces show a second number). Solve this using the formulas and also via simulation.
+
+```{r}
+
+
+
+```
+
+11. A coke hand in bridge is one where none of the thirteen cards is an ace or is higher than a 9. What is the probability of being dealt a coke hand? Use formulas and also simulation to solve this problem.
+
+```{r}
+
+
+
+```
+
