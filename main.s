@@ -39,14 +39,21 @@ cycle	LDR R0, [R1] ;Loading the data in R1 into R0
 				 ;CMP -> subtraction
 				 ;R0- 0x10, depending on result, set flags
 		BEQ switch2 ;if switch2 is on
-		;switch not pressed do this
+		
+		CMP R0, #SW1 ; compare SW1 and R0
+		BEQ switch1  ; if switch1 is on jump to switch1 protocol
+		
+		; if the switches are not pressed do the following
 		ORR R0, R0, #PURPLE ;R4
 		STR R0,[R1];r0 into r1 once this is stored the light will turn on
 		B cycle
-switch2	;switch2 is pressed and this code will execute we get here from the BEQ in line 38.
+switch2	;switch2 is pressed and this code will execute we get here from the BEQ in line 41.
 		ORR R0, R0, #BLUE
 		STR R0, [R1] ; store the value of blue in register 1.
-
+	B cycle
+switch1	;switch1 is pressed and this code will execute we get here from the BEQ in line 44.
+		ORR R0, R0, #RED
+		STR R0, [R1]	; Store the value of red in register 1.
 	B cycle
 		
   
