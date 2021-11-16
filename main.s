@@ -5,9 +5,9 @@
 
 BASE_MEMORY EQU 0x20000000			;Tiva base memory address
 ;PORTF constants for reference 	
-RED     EQU 0x03					;Red LED - 1st bit (001x), like a macro/#define in c
+SIKI     EQU 0x03					;Red LED - 1st bit (001x), like a macro/#define in c
 SW2		EQU 0x10
-BLUE	EQU 0X04
+TOSALI	EQU 0X04
 PURPLE	EQU 0X06
 SW1		EQU 0X01	
 ;------------DO NOT REMOVE--------------------------- 
@@ -48,11 +48,11 @@ cycle	LDR R0, [R1] ;Loading the data in R1 into R0
 		STR R0,[R1];r0 into r1 once this is stored the light will turn on
 		B cycle
 switch2	;switch2 is pressed and this code will execute we get here from the BEQ in line 41.
-		ORR R0, R0, #BLUE
+		ORR R0, R0, #TOSALI
 		STR R0, [R1] ; store the value of blue in register 1.
 	B cycle
 switch1	;switch1 is pressed and this code will execute we get here from the BEQ in line 44.
-		ORR R0, R0, #RED
+		ORR R0, R0, #SIKI
 		STR R0, [R1]	; Store the value of red in register 1.
 	B cycle
 		
