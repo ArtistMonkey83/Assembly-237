@@ -1,0 +1,204 @@
+; Yolie Reyes
+; #011234614
+; Program 6: Stoplight LEDs
+; EECE 237 Fall 2021
+
+BASE_MEMORY EQU 0x20000000			;Tiva base memory address
+MAXRELOAD   EQU 0x00FFFFFF			;
+HALFRELOAD  EQU 0x007FFFFF
+RED         EQU 0x02
+YELLOW      EQU 0x0A
+GREEN	    EQU 0x08
+SW1         EQU 0x01
+SW2	    EQU 0x10
+;PORTF constants for reference
+;------------DO NOT REMOVE--------------------------- 
+        AREA    |.text|, CODE, READONLY, ALIGN=2 
+        THUMB 
+        GET tm4c123gh6pm.s
+        EXPORT  Start
+		EXPORT  SysTick_Handler
+;------------DO NOT REMOVE--------------------------- 
+
+Start;----------write your code below this line!-----
+	BL		PORT_F_INIT			;Function: Initializes Port F, I/O, etc. Leave this alone!
+	
+	LDR R2, =GPIO_PORTF_DATA_R			;Load the address for the Data register into R2
+	LDR R3, [R2]					;Load the DATA register's data into R3
+	ORR R3, R3, #RED				;OR'ing the value with RED will set the value to red in R3
+	STR R3, [R2]    				;Turn on red light by storing the new value at data location
+
+	BL		SysTick_INIT
+	
+loop B loop
+ERR
+	 B ERR
+;------------------------------------------------------------------
+;----------------------Subroutines Start Here----------------------
+;------------------------------------------------------------------
+
+
+;----------GPIO Port F Initialization --------------
+;Sets up GPIO Port F to work with the Tiva LaunchPad Switches and LEDs
+;Input: None
+;Output: None
+;Modifies R0, R1
+;DO NOT REMOVE OR ALTER THIS!
+PORT_F_INIT
+	; 1) Activate Clock for Port F by using one of the system control registers
+	LDR R1, =SYSCTL_RCGC2_R			 ;Get the address of the RCGC2_R Register and load into R1
+	LDR R0, [R1]					 ;Load the contents of the RCGC2_R Register into R0
+									 ;The first 6 bits of this register control the activation of the
+									 ;GPIO clocks, setting them to a 1 will turn them on.
+	ORR R0, #0x20					 ;Masks the current state of the RCGC2_R register to set bit 5 to a 1
+	STR R0, [R1]				     ;Load the changed contents of R0 back into RCGC2_R register
+	NOP
+	NOP								 ;Small delay for the clock to activate, cannot make any changes until this
+									 ;is done
+	; 2) Unlock the lock register for PORTF
+	LDR R1, =GPIO_PORTF_LOCK_R	     ;Load the address of the PORTF Lock register into R1
+	LDR R0, =GPIO_LOCK_KEY			 ;Load the lock key value into R0
+	STR R0, [R1]					 ;Load R0 into the address stored in R1
+	
+	LDR R1, =GPIO_PORTF_CR_R		 ;Load the address of the PORTF Commit register into R1
+	LDR R0, [R1]					 ;
+	ORR R0, #0xFF					 ;Set all 8 lower bits to 1, enables writing to all bits in the PUR_R Register
+	STR R0, [R1]					 ;
+	
+	; 3) Disable analog functionality
+	LDR R1, =GPIO_PORTF_AMSEL_R		 ;Load the address of the PORTF Analog Mode Select register into R1
+	LDR R0, [R1]					 ;
+	AND R0, #0x00					 ;Clear the bits to deactivate the Analog function of this port
+	STR R0, [R1]
+	
+	; 4) Clear the bits in the GPIO Port Control register so that the port can be used as a GPIO
+	LDR R1, =GPIO_PORTF_PCTL_R	     ;Load the address of PortF Control register into R1
+	LDR R0, = 0x00000000	  		 ;Each nibble controls the configuration of a single pin. Set all to 0 to  
+									 ;configure the port as GPIO
+	STR R0, [R1]				     ;
+	
+	; 5) Set the Direction register
+	LDR R1, =GPIO_PORTF_DIR_R		 ;Load the address of the PORTF Direction register into R1
+	LDR R0, [R1]				     ;			
+	ORR R0, #0x0E					 ;Set PF0, PF4-7 as input, set PF1-3 as output
+	STR R0, [R1]					 ;
+	
+	; 6) Clear the bits in the Alternate Function register
+	LDR R1, =GPIO_PORTF_AFSEL_R		 ;Load the address of the PORTF Alternate Function register into R1
+	LDR R0, [R1]					 ;
+	AND R0, #0x00					 ;Clear the bits
+	STR R0, [R1]
+	
+	LDR R1, =GPIO_PORTF_PUR_R       ; pull-up resistors for PF4,PF0
+    MOV R0, #0x11                   ; enable weak pull-up on PF0 and PF4
+    STR R0, [R1]  
+	
+	; 7) Enable the Digital port
+	
+	LDR R1, =GPIO_PORTF_DEN_R		 ;Load the address of the PORTF Digital Enable register into R1
+	LDR R0, [R1]					 ;
+	ORR R0, #0xFF					 ;Enable all 8 bits
+	STR R0, [R1]					 ;
+	
+	BX LR							 ;Branch redirect to the location specified by the Link Register (LR)
+									 ;LR has the return address
+	B ERR							 ;Something bad happened				
+	
+;------------SysTick Initialization----------------------------
+SysTick_INIT
+	;Step 1: disable Systick
+	LDR R1, =NVIC_ST_CTRL_R
+	MOV R0, #0x0
+	STR R0, [R1]
+	
+	;Step 2: Set maximum counter length
+	LDR R1, =NVIC_ST_RELOAD_R
+	LDR R0, =HALFRELOAD
+	STR R0, [R1]
+	
+	;Step 3: clear current value
+	LDR R1, =NVIC_ST_CURRENT_R
+	MOV R0, #0x0
+	STR R0, [R1]
+	
+	;Step 4: Set interrupt priority
+	LDR R1, =NVIC_SYS_PRI3_R
+	LDR R0, [R1]
+	ORR R0, R0, #0x05000000
+	STR R0, [R1]
+	
+	;Step 5: Re-enable SysTick
+	LDR R1, =NVIC_ST_CTRL_R
+	MOV R0, #0X00000007
+	STR R0, [R1]
+	
+	
+	BX LR
+	
+;------------SysTick Interrupt----------------------------------
+SysTick_Handler
+		LDR R3, [R2]
+	    AND R3, R3, #0x0E ;clear switch check light
+		CMP R3, #YELLOW ;it compare yellow or not, 
+		BEQ yellow
+		
+		CMP R3, #GREEN ;it compare green or not
+		BEQ green
+		
+		LDR R3, [R2]
+		AND R3, R3, #0xF1
+		CMP R3, #SW2
+		BEQ switch2
+		CMP R3, #SW1
+		BEQ switch1
+		B endTick
+
+switch2
+		ORR R3, R3, #YELLOW
+		STR R3, [R2]
+		B endTick
+		
+switch1
+		ORR R3, R3, #YELLOW
+		STR R3, [R2]
+		B endTick
+
+yellow
+		LDR R3, [R2]    
+		AND R3, R3, #0xF1
+		ORR R3, R3, #GREEN          ;make it Siali
+		STR R3, [R2]
+		LDR R1, =NVIC_ST_CTRL_R    ;pause timer
+		MOV R0, #0x0
+		STR R0, [R1]
+		LDR R1, =NVIC_ST_RELOAD_R  ;change reload to 1s
+		LDR R0, =MAXRELOAD
+		STR R0, [R1]
+		LDR R1, =NVIC_ST_CTRL_R    ;restart timer
+		MOV R0, #0X00000007
+		STR R0, [R1]
+		B endTick
+		
+green
+		LDR R3, [R2]    
+		AND R3, R3, #0xF1
+		ORR R3, R3, #RED          ;make it Siki
+		STR R3, [R2]
+		LDR R1, =NVIC_ST_CTRL_R    ;pause timer
+		MOV R0, #0x0
+		STR R0, [R1]
+		LDR R1, =NVIC_ST_RELOAD_R  ;change reload to 1s
+		LDR R0, =HALFRELOAD
+		STR R0, [R1]
+		LDR R1, =NVIC_ST_CTRL_R    ;restart timer
+		MOV R0, #0X00000007
+		STR R0, [R1]
+		B endTick
+
+endTick
+	BX LR	
+	
+;------------DO NOT REMOVE-------------------------------------
+    ALIGN                           ; make sure the end of this section is aligned
+    END                             ; end of file
+;------------DO NOT REMOVE------------------------------------
