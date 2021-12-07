@@ -1,0 +1,106 @@
+#include "tm4c123gh6pm.h" //EXTERIOR (3D PARTY) HEADER FILE
+#include <stdint.h> //INTERIOR HEADER FILE
+#include <stdio.h>
+
+//function prototypes go under here no the whole funciton just the return type name and types of any parameters
+
+void PORT_F_INT(void);	//return type, name of function, (parameters passed in)
+void setLED(uint32_t);
+void checkButtons(void);
+void delay(void);
+
+volatile temp;
+const uint32_t SIKI = 0X02;
+const uint32_t PURPLE = 0X06;
+const uint32_t CYAN = 0X0C;
+const uint32_t WHITE = 0X0E;
+const uint32_t SW1 = 0X01;
+const uint32_t SW2 = 0X10;
+
+
+//main function
+// this is where your code starts executing
+// should do most of  your work in functions
+// syour program will stop executing once " return 0" executes, if it ever does
+
+int main (void)
+{
+	//doesn't work on TIVA int c = 5;
+	uint32_t siki = 0x02; 								//unsigned integer (32 bits long)
+	
+	PORT_F_INIT();												//Port F will be enabled after this function executes
+	//BL PORT_F_INIT
+	while(1){															//One is always true so this is an infinate loop
+		checkButtons();
+		setLED(siki);															//Function call
+		color = color +2;
+		
+		if(color > WHITE){color = RED}
+	}
+	return 0;
+}
+
+// function definitions go under here 
+// this is where you actually write your code
+void PORT_F_INIT(){
+	SYSCTL_RCGCGPIO_R |= 0X20		//ACTIVATE GPIO CLOCK FOR PORT F
+															
+															// | a pipe is equal to an OR operation "x = x+1" or "x+=1" 
+															// ADD x, x, #1
+	GPIO_PORTF_LOCK_R = GPIO_LOCK_KEY;		// Unlock PORTF
+	GPIO_PORTF_CR_R =  0XFF;							// eNABLE WRITING TO PULL REGISTER FOR PORTF
+	GPIO_PORTF_AMSEL_R = 0;								// aNALOG DISABLED
+	GPIO_PORTF_PCTL_R = 0;								// SETS PORT TO USE GENERAL INPUT/OUTPUT
+	GPIO_PORTF_AFSEL_R = 0;								// DISABLES ALTERNATE FUNCTIONS
+	GPIO_PORTF_PUR_R = 0X11;							// ENABLES PULL UP RESISTORS FOR JUST SW1 AND SW2
+	
+	// x x x SW1  g b r SW2
+	// 0 0 0 0    0 0 0 0
+	// 1 == 0001, SO WE NEED 0X11 to access the switches 1 and 2
+	
+	GPIO_PORTF_DIR_R = 0X0E;						// SETS OUTPUT(1) INPUT (0)
+	// 0X0E == 0000 1110 
+	// THIS WILL SET THE LIGHTS TO BE OUTPUTS, IF YOU WANT A PIN TO BE AN INPUT IT NEEDS TO BE 0
+	// THE LIGHTS WILL HAVE 1S AND THE SWITCHES WILL HAVE 0.
+	GPIO_PORTF_DEN_R = 0XFF;						// ENABLES DIGITAL SIGNALES FOR ALL PINS
+}
+
+//turns on our light to red
+void setLED(uint32_t rojo){
+//clear current color
+			GPIO_PORTF_DATA_R &= 0XF1
+	// set bits with or
+	//set color bit in portf data	
+	GPIO_PORTF_DATA_R |= rojo;
+
+
+}
+
+void checkButtons(){
+	uint32_t currentData = GPIO_PORTF_DATA_R;
+	currentData &= 0XF1;
+	
+	while( currentData== SW1 | currentData ==SW2){
+		if(currentData == SW1){  //if SW1 is pressed
+			//clear current color
+			GPIO_PORTF_DATA_R &= 0XF1
+			//set a new color
+			GPIO_PORTF_DATA_R |= PURPLE;
+		} else if(currentData == SW2){
+					//clear current color
+			GPIO_PORTF_DATA_R &= 0XF1
+			//set a new color
+			GPIO_PORTF_DATA_R |= CYAN;
+			}
+	}
+	uint32_t currentData = GPIO_PORTF_DATA_R;
+	currentData &= 0XF1;
+}
+	
+void delay() {
+	uint32_t max = 0x00ffffff;
+
+	for(uint32_t i = 0;i < max; i++){temp = }
+}
+	
+	
